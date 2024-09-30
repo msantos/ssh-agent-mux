@@ -118,13 +118,11 @@ func (a *Proxy) Remove(key ssh.PublicKey) error {
 }
 
 // RemoveAll removes all identities.
-func (a *Proxy) RemoveAll() error {
+func (a *Proxy) RemoveAll() (err error) {
 	for _, v := range a.w {
-		if err := v.RemoveAll(); err != nil {
-			return err
-		}
+		err = errors.Join(err, v.RemoveAll())
 	}
-	return nil
+	return err
 }
 
 // Lock locks the agent. Sign and Remove will fail, and List will empty an empty list.
