@@ -9,7 +9,7 @@ import (
 	"net"
 	"strings"
 
-	"git.iscode.ca/msantos/ssh-agent-mux/internal/pkg/agent"
+	"github.com/msantos/ssh-agent-mux/internal/pkg/agent"
 )
 
 type Remote struct {

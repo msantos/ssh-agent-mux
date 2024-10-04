@@ -1,4 +1,4 @@
-module git.iscode.ca/msantos/ssh-agent-mux
+module github.com/msantos/ssh-agent-mux
 
 go 1.23.0
 

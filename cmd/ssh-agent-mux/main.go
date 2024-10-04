@@ -6,8 +6,8 @@ import (
 	"os"
 	"path"
 
-	"git.iscode.ca/msantos/ssh-agent-mux/cmd/ssh-agent-mux/internal/proxy"
-	"git.iscode.ca/msantos/ssh-agent-mux/internal/pkg/config"
+	"github.com/msantos/ssh-agent-mux/cmd/ssh-agent-mux/internal/proxy"
+	"github.com/msantos/ssh-agent-mux/internal/pkg/config"
 )
 
 var f = flag.NewFlagSet(os.Args[0], flag.ExitOnError)

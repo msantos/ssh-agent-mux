@@ -15,9 +15,9 @@ import (
 	"strings"
 	"syscall"
 
-	"git.iscode.ca/msantos/ssh-agent-mux/internal/pkg/agent"
-	"git.iscode.ca/msantos/ssh-agent-mux/internal/pkg/config"
-	"git.iscode.ca/msantos/ssh-agent-mux/internal/pkg/proxy"
+	"github.com/msantos/ssh-agent-mux/internal/pkg/agent"
+	"github.com/msantos/ssh-agent-mux/internal/pkg/config"
+	"github.com/msantos/ssh-agent-mux/internal/pkg/proxy"
 )
 
 type Addr struct {
