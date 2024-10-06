@@ -88,13 +88,14 @@ func (o *Opt) Accept(ctx context.Context, l net.Listener) error {
 	}
 }
 
-func (o *Opt) dial(network, address string) (net.Conn, error) {
+func (o *Opt) dial(netopt, address string) (net.Conn, error) {
+	network, opt, _ := strings.Cut(netopt, "+")
+
 	switch network {
 	case "tcp", "unix":
 		return net.Dial(network, address)
-	}
-
-	if !(strings.HasPrefix(network, "tls") || strings.HasPrefix(network, "mtls")) {
+	case "tls", "mtls":
+	default:
 		return nil, net.UnknownNetworkError(network)
 	}
 
@@ -114,11 +115,11 @@ func (o *Opt) dial(network, address string) (net.Conn, error) {
 		MinVersion: tls.VersionTLS13,
 	}
 
-	if strings.HasPrefix(network, "mtls") {
+	if network == "mtls" {
 		config.Certificates = o.tlsClientCerts
 	}
 
-	if strings.HasSuffix(network, "+insecure") {
+	if opt == "insecure" {
 		config.InsecureSkipVerify = true
 	}
 
