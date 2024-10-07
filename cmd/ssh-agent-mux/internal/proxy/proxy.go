@@ -59,14 +59,14 @@ func cafile(rootca string) (*x509.CertPool, error) {
 		return nil, nil
 	}
 
-	certs := x509.NewCertPool()
 	pem, err := os.ReadFile(rootca)
 	if err != nil {
 		return nil, err
 	}
 
-	ok := certs.AppendCertsFromPEM(pem)
-	if !ok {
+	certs := x509.NewCertPool()
+
+	if !certs.AppendCertsFromPEM(pem) {
 		return nil, fmt.Errorf("%w: %s", errBadPEM, pem)
 	}
 
