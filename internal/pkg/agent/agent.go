@@ -78,15 +78,14 @@ func has(a agent.ExtendedAgent, pubkey []byte) error {
 
 // List returns the identities known to the agent.
 func (a *Proxy) List() ([]*agent.Key, error) {
+	var errs error
 	keys := make([]*agent.Key, 0)
 	for _, v := range a.w {
 		key, err := v.List()
-		if err != nil {
-			return key, err
-		}
+		errs = errors.Join(errs, err)
 		keys = append(keys, key...)
 	}
-	return keys, nil
+	return keys, errs
 }
 
 // Sign has the agent sign the data using a protocol 2 key as defined
