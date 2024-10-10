@@ -94,6 +94,19 @@ func handleUnixSock(network, address string) error {
 	return nil
 }
 
+func urlParse(s string) (*url.URL, error) {
+	u, err := url.Parse(s)
+	if err != nil {
+		return u, err
+	}
+
+	if u.Scheme == "" {
+		u.Scheme = "unix"
+	}
+
+	return u, nil
+}
+
 func Run() {
 	help := flag.Bool("help", false, "Display usage")
 	tlsCert := flag.String("tls-cert", config.Path("cert.pem"), "TLS server cert")
@@ -116,7 +129,7 @@ func Run() {
 		os.Exit(2)
 	}
 
-	l, err := url.Parse(flag.Arg(0))
+	l, err := urlParse(flag.Arg(0))
 	if err != nil {
 		log.Fatalln(flag.Arg(0), err)
 	}
@@ -124,7 +137,7 @@ func Run() {
 	remotes := make([]proxy.Remote, 0, flag.NArg()-1)
 
 	for i := 1; i < flag.NArg(); i++ {
-		r, err := url.Parse(flag.Arg(i))
+		r, err := urlParse(flag.Arg(i))
 		if err != nil {
 			log.Fatalln(flag.Arg(i), err)
 		}
