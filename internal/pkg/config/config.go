@@ -25,9 +25,5 @@ func Path(file string) string {
 }
 
 func SSHAgentSock() string {
-	sock := os.Getenv("SSH_AUTH_SOCK")
-	if sock == "" {
-		return ""
-	}
-	return "unix://" + sock
+	return os.Getenv("SSH_AUTH_SOCK")
 }
