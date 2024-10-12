@@ -53,6 +53,4 @@ func main() {
 		fmt.Println("command not found:", command)
 		os.Exit(127)
 	}
-
-	os.Exit(0)
 }
