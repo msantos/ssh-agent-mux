@@ -89,9 +89,7 @@ func handleUnixSock(network, address string) error {
 		return nil
 	}
 
-	_ = os.Remove(address)
-
-	return nil
+	return os.Remove(address)
 }
 
 func urlParse(s string) (*url.URL, error) {
