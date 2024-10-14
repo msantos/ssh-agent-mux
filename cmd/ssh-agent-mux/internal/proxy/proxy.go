@@ -20,13 +20,13 @@ import (
 	"github.com/msantos/ssh-agent-mux/internal/pkg/proxy"
 )
 
-type Addr struct {
+type Local struct {
 	Net  string
 	Addr string
 }
 
 type Opt struct {
-	local         Addr
+	local         Local
 	remotes       []proxy.Remote
 	tlsCert       string
 	tlsKey        string
@@ -162,7 +162,7 @@ func Run() {
 	}
 
 	o := &Opt{
-		local: Addr{
+		local: Local{
 			Net:  l.Scheme,
 			Addr: address(l),
 		},
