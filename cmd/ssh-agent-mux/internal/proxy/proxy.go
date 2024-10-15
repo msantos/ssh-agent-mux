@@ -81,7 +81,7 @@ func handleUnixSock(network, address string) error {
 	c, err := net.Dial(network, address)
 
 	if err == nil {
-		c.Close()
+		_ = c.Close()
 		return syscall.EADDRINUSE
 	}
 
