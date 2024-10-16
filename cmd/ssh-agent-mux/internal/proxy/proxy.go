@@ -20,13 +20,8 @@ import (
 	"github.com/msantos/ssh-agent-mux/internal/pkg/proxy"
 )
 
-type Local struct {
-	Net  string
-	Addr string
-}
-
 type Opt struct {
-	local         Local
+	local         *url.URL
 	remotes       []proxy.Remote
 	tlsCert       string
 	tlsKey        string
@@ -73,12 +68,12 @@ func cafile(rootca string) (*x509.CertPool, error) {
 	return certs, nil
 }
 
-func handleUnixSock(network, address string) error {
-	if network != "unix" {
+func handleUnixSock(l *url.URL) error {
+	if l.Scheme != "unix" {
 		return nil
 	}
 
-	c, err := net.Dial(network, address)
+	c, err := net.Dial("unix", l.Path)
 
 	if err == nil {
 		_ = c.Close()
@@ -89,7 +84,7 @@ func handleUnixSock(network, address string) error {
 		return nil
 	}
 
-	return os.Remove(address)
+	return os.Remove(l.Path)
 }
 
 func urlParse(s string) (*url.URL, error) {
@@ -162,10 +157,7 @@ func Run() {
 	}
 
 	o := &Opt{
-		local: Local{
-			Net:  l.Scheme,
-			Addr: address(l),
-		},
+		local:         l,
 		remotes:       remotes,
 		tlsCert:       *tlsCert,
 		tlsKey:        *tlsKey,
@@ -175,7 +167,7 @@ func Run() {
 		extensions:    ext,
 	}
 
-	if err := handleUnixSock(o.local.Net, o.local.Addr); err != nil {
+	if err := handleUnixSock(o.local); err != nil {
 		log.Fatalln(err)
 	}
 
@@ -187,7 +179,7 @@ func Run() {
 }
 
 func (o *Opt) run(ctx context.Context) error {
-	l, err := o.listen(o.local.Net, o.local.Addr)
+	l, err := o.listen()
 	if err != nil {
 		return err
 	}
@@ -220,11 +212,13 @@ func (o *Opt) run(ctx context.Context) error {
 	return p.Accept(ctx, l)
 }
 
-func (o *Opt) listen(network, address string) (net.Listener, error) {
-	switch network {
+func (o *Opt) listen() (net.Listener, error) {
+	switch o.local.Scheme {
 	case "tls", "mtls":
+	case "unix":
+		return net.Listen("unix", o.local.Path)
 	default:
-		return net.Listen(network, address)
+		return net.Listen(o.local.Scheme, o.local.Host)
 	}
 
 	certificate, err := tls.LoadX509KeyPair(o.tlsCert, o.tlsKey)
@@ -237,10 +231,10 @@ func (o *Opt) listen(network, address string) (net.Listener, error) {
 		MinVersion:   tls.VersionTLS13,
 	}
 
-	if network == "mtls" {
+	if o.local.Scheme == "mtls" {
 		config.ClientAuth = tls.RequireAndVerifyClientCert
 		config.ClientCAs = o.tlsRootCAs
 	}
 
-	return tls.Listen("tcp", address, config)
+	return tls.Listen("tcp", o.local.Host, config)
 }
