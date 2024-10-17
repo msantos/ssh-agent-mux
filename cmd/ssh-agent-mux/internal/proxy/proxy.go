@@ -22,7 +22,7 @@ import (
 
 type Opt struct {
 	local         *url.URL
-	remotes       []proxy.Remote
+	remotes       []*url.URL
 	tlsCert       string
 	tlsKey        string
 	tlsRootCAs    *x509.CertPool
@@ -127,17 +127,14 @@ func Run() {
 		log.Fatalln(flag.Arg(0), err)
 	}
 
-	remotes := make([]proxy.Remote, 0, flag.NArg()-1)
+	remotes := make([]*url.URL, 0, flag.NArg()-1)
 
 	for i := 1; i < flag.NArg(); i++ {
 		r, err := urlParse(flag.Arg(i))
 		if err != nil {
 			log.Fatalln(flag.Arg(i), err)
 		}
-		remotes = append(remotes, proxy.Remote{
-			Net:  r.Scheme,
-			Addr: address(r),
-		})
+		remotes = append(remotes, r)
 	}
 
 	rootcas, err := cafile(*tlsRootCAs)
@@ -191,7 +188,7 @@ func (o *Opt) run(ctx context.Context) error {
 	clientCerts := make([]tls.Certificate, 0)
 
 	for _, v := range o.remotes {
-		if strings.HasPrefix(v.Net, "mtls") {
+		if strings.HasPrefix(v.Scheme, "mtls") {
 			certificate, err := tls.LoadX509KeyPair(o.tlsClientCert, o.tlsClientKey)
 			if err != nil {
 				return err

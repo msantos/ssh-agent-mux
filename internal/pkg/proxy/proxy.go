@@ -7,18 +7,14 @@ import (
 	"errors"
 	"io"
 	"net"
+	"net/url"
 	"strings"
 
 	"github.com/msantos/ssh-agent-mux/internal/pkg/agent"
 )
 
-type Remote struct {
-	Net  string
-	Addr string
-}
-
 type Opt struct {
-	remotes        []Remote
+	remotes        []*url.URL
 	log            func(error)
 	rootCAs        *x509.CertPool
 	tlsClientCerts []tls.Certificate
@@ -58,7 +54,7 @@ func WithExtensions(e []agent.Extension) Option {
 }
 
 // New sets configuration options for a proxy.
-func New(remotes []Remote, opt ...Option) *Opt {
+func New(remotes []*url.URL, opt ...Option) *Opt {
 	o := &Opt{
 		remotes: remotes,
 		log:     func(_ error) {},
@@ -88,23 +84,25 @@ func (o *Opt) Accept(ctx context.Context, l net.Listener) error {
 	}
 }
 
-func (o *Opt) dial(netopt, address string) (net.Conn, error) {
-	network, opt, _ := strings.Cut(netopt, "+")
+func (o *Opt) dial(remote *url.URL) (net.Conn, error) {
+	network, opt, _ := strings.Cut(remote.Scheme, "+")
 
 	switch network {
-	case "tcp", "unix":
-		return net.Dial(network, address)
+	case "tcp":
+		return net.Dial(network, remote.Host)
+	case "unix":
+		return net.Dial(network, remote.Path)
 	case "tls", "mtls":
 	default:
 		return nil, net.UnknownNetworkError(network)
 	}
 
-	c, err := net.Dial("tcp", address)
+	c, err := net.Dial("tcp", remote.Host)
 	if err != nil {
 		return nil, err
 	}
 
-	serverName, _, err := net.SplitHostPort(address)
+	serverName, _, err := net.SplitHostPort(remote.Host)
 	if err != nil {
 		return nil, err
 	}
@@ -131,7 +129,7 @@ func (o *Opt) proxy(ctx context.Context, client net.Conn) {
 
 	remotes := make([]io.ReadWriter, 0, len(o.remotes))
 	for _, v := range o.remotes {
-		c, err := o.dial(v.Net, v.Addr)
+		c, err := o.dial(v)
 		if err != nil {
 			o.log(err)
 			return
