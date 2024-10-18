@@ -19,7 +19,7 @@ type Opt struct {
 type Proxy struct {
 	*Opt
 
-	w []agent.ExtendedAgent // to servers
+	w []agent.ExtendedAgent // to remote agents
 }
 
 type Option func(*Opt)
@@ -61,7 +61,7 @@ var (
 	ErrUnsupportedOp = errors.New("agent does not support operation")
 )
 
-func has(a agent.ExtendedAgent, pubkey []byte) error {
+func exists(a agent.ExtendedAgent, pubkey []byte) error {
 	keys, err := a.List()
 	if err != nil {
 		return err
@@ -92,10 +92,15 @@ func (a *Proxy) List() ([]*agent.Key, error) {
 // in [PROTOCOL.agent] section 2.6.2.
 func (a *Proxy) Sign(key ssh.PublicKey, data []byte) (*ssh.Signature, error) {
 	for _, v := range a.w {
-		if has(v, key.Marshal()) != nil {
+		err := exists(v, key.Marshal())
+		switch err {
+		case nil:
+			return v.Sign(key, data)
+		case ErrNoKey:
 			continue
+		default:
+			return nil, err
 		}
-		return v.Sign(key, data)
 	}
 	return nil, ErrNoKey
 }
@@ -108,10 +113,15 @@ func (a *Proxy) Add(key agent.AddedKey) error {
 // Remove removes all identities with the given public key.
 func (a *Proxy) Remove(key ssh.PublicKey) error {
 	for _, v := range a.w {
-		if has(v, key.Marshal()) != nil {
+		err := exists(v, key.Marshal())
+		switch err {
+		case nil:
+			return v.Remove(key)
+		case ErrNoKey:
 			continue
+		default:
+			return err
 		}
-		return v.Remove(key)
 	}
 	return ErrNoKey
 }
@@ -156,10 +166,15 @@ func (a *Proxy) Signers() ([]ssh.Signer, error) {
 // SignWithFlags signs like Sign, but allows for additional flags to be sent/received
 func (a *Proxy) SignWithFlags(key ssh.PublicKey, data []byte, flags agent.SignatureFlags) (*ssh.Signature, error) {
 	for _, v := range a.w {
-		if has(v, key.Marshal()) != nil {
+		err := exists(v, key.Marshal())
+		switch err {
+		case nil:
+			return v.SignWithFlags(key, data, flags)
+		case ErrNoKey:
 			continue
+		default:
+			return nil, err
 		}
-		return v.SignWithFlags(key, data, flags)
 	}
 	return nil, ErrNoKey
 }
