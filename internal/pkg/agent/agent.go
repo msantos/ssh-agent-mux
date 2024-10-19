@@ -61,19 +61,19 @@ var (
 	ErrUnsupportedOp = errors.New("agent does not support operation")
 )
 
-func exists(a agent.ExtendedAgent, pubkey []byte) error {
+func exists(a agent.ExtendedAgent, pubkey []byte) (bool, error) {
 	keys, err := a.List()
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	for _, v := range keys {
 		if bytes.Equal(v.Marshal(), pubkey) {
-			return nil
+			return true, nil
 		}
 	}
 
-	return ErrNoKey
+	return false, nil
 }
 
 // List returns the identities known to the agent.
@@ -92,14 +92,12 @@ func (a *Proxy) List() ([]*agent.Key, error) {
 // in [PROTOCOL.agent] section 2.6.2.
 func (a *Proxy) Sign(key ssh.PublicKey, data []byte) (*ssh.Signature, error) {
 	for _, v := range a.w {
-		err := exists(v, key.Marshal())
-		switch err {
-		case nil:
-			return v.Sign(key, data)
-		case ErrNoKey:
-			continue
-		default:
+		ok, err := exists(v, key.Marshal())
+		if err != nil {
 			return nil, err
+		}
+		if ok {
+			return v.Sign(key, data)
 		}
 	}
 	return nil, ErrNoKey
@@ -113,14 +111,12 @@ func (a *Proxy) Add(key agent.AddedKey) error {
 // Remove removes all identities with the given public key.
 func (a *Proxy) Remove(key ssh.PublicKey) error {
 	for _, v := range a.w {
-		err := exists(v, key.Marshal())
-		switch err {
-		case nil:
-			return v.Remove(key)
-		case ErrNoKey:
-			continue
-		default:
+		ok, err := exists(v, key.Marshal())
+		if err != nil {
 			return err
+		}
+		if ok {
+			return v.Remove(key)
 		}
 	}
 	return ErrNoKey
@@ -166,14 +162,12 @@ func (a *Proxy) Signers() ([]ssh.Signer, error) {
 // SignWithFlags signs like Sign, but allows for additional flags to be sent/received
 func (a *Proxy) SignWithFlags(key ssh.PublicKey, data []byte, flags agent.SignatureFlags) (*ssh.Signature, error) {
 	for _, v := range a.w {
-		err := exists(v, key.Marshal())
-		switch err {
-		case nil:
-			return v.SignWithFlags(key, data, flags)
-		case ErrNoKey:
-			continue
-		default:
+		ok, err := exists(v, key.Marshal())
+		if err != nil {
 			return nil, err
+		}
+		if ok {
+			return v.SignWithFlags(key, data, flags)
 		}
 	}
 	return nil, ErrNoKey
