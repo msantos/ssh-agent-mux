@@ -40,13 +40,6 @@ Options:
 	flag.PrintDefaults()
 }
 
-func address(u *url.URL) string {
-	if u.Scheme == "unix" {
-		return u.Path
-	}
-	return u.Host
-}
-
 var errBadPEM = errors.New("bad PEM")
 
 func cafile(rootca string) (*x509.CertPool, error) {
