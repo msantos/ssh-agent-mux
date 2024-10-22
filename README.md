@@ -12,8 +12,8 @@ or accessed remotely over the network.
 
 ## Rationale
 
-On ChromeOS, the default `penguin.lxd` container can access hardware
-tokens like the Yubikey. Other containers do not have access to the token.
+The default `penguin.lxd` ChromeOS container has access to hardware
+tokens like the Yubikey. Other containers cannot access the token.
 
 ```mermaid
 graph TD
@@ -27,8 +27,8 @@ graph TD
     muxclient2 -->|unix socket| local2["ssh-agent"]
   end
   subgraph penguin ["penguin.lxd"]
-    muxclient ==>|TLS| muxserver["ssh-agent-mux"] -->|unix socket| tokenagent["yubikey ssh-agent"]
-    muxclient2 ==>|TLS| muxserver["ssh-agent-mux"]
+    muxclient ==>|mTLS| muxserver["ssh-agent-mux"] -->|unix socket| tokenagent["yubikey ssh-agent"]
+    muxclient2 ==>|mTLS| muxserver["ssh-agent-mux"]
     tokenagent -->|pcscd| yubikey
   end
   end
