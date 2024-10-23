@@ -1,4 +1,4 @@
-# SYNOPSIS
+# SYNOPSIm
 
 ssh-agent-mux proxy [*options*] *local* *remote* *...*
 
@@ -25,6 +25,9 @@ graph TD
   subgraph ubuntults ["Ubuntu LTS"]
     ssh2["ssh"] -->|unix socket| muxclient2["ssh-agent-mux"]
     muxclient2 -->|unix socket| local2["ssh-agent"]
+  end
+  subgraph dev ["Dev (No Token Access)"]
+    ssh3["ssh"] -->|unix socket| local3["ssh-agent"]
   end
   subgraph penguin ["penguin.lxd"]
     muxclient ==>|mTLS| muxserver["ssh-agent-mux"] -->|unix socket| tokenagent["yubikey ssh-agent"]
