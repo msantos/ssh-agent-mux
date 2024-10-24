@@ -1,4 +1,4 @@
-# SYNOPSIm
+# SYNOPSIS
 
 ssh-agent-mux proxy [*options*] *local* *remote* *...*
 
