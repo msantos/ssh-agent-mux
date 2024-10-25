@@ -97,7 +97,7 @@ func Run() {
 	help := flag.Bool("help", false, "Display usage")
 	tlsCert := flag.String("tls-cert", config.Path("cert.pem"), "TLS server cert")
 	tlsKey := flag.String("tls-key", config.Path("key.pem"), "TLS server key")
-	tlsRootCAs := flag.String("tls-rootca", "", "TLS root CA file")
+	tlsRootCAs := flag.String("tls-rootca", config.Path("rootca.pem"), "TLS root CA file (\"\": use default root CA store)")
 	tlsClientCert := flag.String("tls-client-cert", config.Path("client.pem"), "TLS client cert")
 	tlsClientKey := flag.String("tls-client-key", config.Path("client-key.pem"), "TLS client key")
 	extensions := flag.String("extensions", "", "Proxy ssh agent extensions")
