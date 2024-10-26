@@ -44,7 +44,11 @@ var errBadPEM = errors.New("bad PEM")
 
 func cafile(rootca string) (*x509.CertPool, error) {
 	if rootca == "" {
-		return nil, nil
+		rootca = config.Path("rootca.pem")
+		if _, err := os.Stat(rootca); err != nil {
+			// Use system CA root store
+			return nil, nil
+		}
 	}
 
 	pem, err := os.ReadFile(rootca)
@@ -97,7 +101,7 @@ func Run() {
 	help := flag.Bool("help", false, "Display usage")
 	tlsCert := flag.String("tls-cert", config.Path("cert.pem"), "TLS server cert")
 	tlsKey := flag.String("tls-key", config.Path("key.pem"), "TLS server key")
-	tlsRootCAs := flag.String("tls-rootca", config.Path("rootca.pem"), "TLS root CA file (\"\": use default root CA store)")
+	tlsRootCAs := flag.String("tls-rootca", "", fmt.Sprintf("TLS root CA file (default: %s, system CA root)", config.Path("rootca.pem")))
 	tlsClientCert := flag.String("tls-client-cert", config.Path("client.pem"), "TLS client cert")
 	tlsClientKey := flag.String("tls-client-key", config.Path("client-key.pem"), "TLS client key")
 	extensions := flag.String("extensions", "", "Proxy ssh agent extensions")
