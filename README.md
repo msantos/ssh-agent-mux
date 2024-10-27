@@ -62,3 +62,45 @@ ssh-agent-mux proxy mtls://[::]:10080 $SSH_AUTH_SOCK
 ```
 ssh-agent-mux proxy agent.sock $SSH_AUTH_SOCK mtls://penguin.lxd:10080
 ```
+
+# AGENT PROTOCOL EXTENSIONS
+
+SSH agent protocol extension requests are controlled by the `--extensions`
+argument. By default, extension requests return an extension unsupported
+error.
+
+The `--extensions` flag is a list of space separated matches. Each match
+consists of a `behaviour`:`regexp`. The regular expression matches the
+agent extension name.
+
+```
+ssh-agent-mux proxy --extensions="all:ext1@example.com first:ext2@example.com any:ext3@example.com" \
+  agent.sock $SSH_AUTH_SOCK mtls://penguin.lxd:10080
+```
+
+To match all agent extensions:
+
+```
+--extensions "first:."
+```
+
+## Behaviours
+
+Extension requests are sent to the backends in the order specified on
+the command line.
+
+Behaviours skip backends which do not support the extension. If no
+backends support the extension, the proxy returns agent extension
+unsupported.
+
+all
+: the extension request is sent to all backends, returning any errors
+
+first
+: the extension request is sent to each backend in order. The response
+from the first backend supporting the extension is returned.
+
+any
+: the extension request is sent to each backend in order:
+* if a backend returns an error, the next backend is tried
+* if a backend returns success, the proxy returns success
