@@ -104,3 +104,23 @@ any
 : the extension request is sent to each backend in order:
 * if a backend returns an error, the next backend is tried
 * if a backend returns success, the proxy returns success
+
+# COMMANDS
+
+## proxy
+
+The listening and remote sockets are URL formatted. Supported schemes are:
+
+* `unix`: unix socket
+  * example: unix:///tmp/agent-test.s
+  * paths can also be used: /tmp/agent-test.s
+* `tcp`: unencrypted TCP socket
+  * example: tcp:///penguin.lxd:10080
+* `tls`: TLS socket
+  * example: tls:///penguin.lxd:10080
+* `mtls`: mutual TLS socket (TLS with client certificate)
+  * example: mtls:///penguin.lxd:10080
+
+Options are appended to the scheme:
+* `insecure`: disable certificate checks for testing
+  * example: mtls+insecure:///penguin.lxd:10080
