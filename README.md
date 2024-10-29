@@ -101,9 +101,9 @@ first
 from the first backend supporting the extension is returned.
 
 any
-: the extension request is sent to each backend in order:
-* if a backend returns an error, the next backend is tried
-* if a backend returns success, the proxy returns success
+: the extension request is sent to each backend in order. If a backend
+returns an error, the next backend is tried. If a backend returns success,
+the proxy returns success.
 
 # COMMANDS
 
@@ -124,3 +124,23 @@ The listening and remote sockets are URL formatted. Supported schemes are:
 Options are appended to the scheme:
 * `insecure`: disable certificate checks for testing
   * example: mtls+insecure:///penguin.lxd:10080
+
+### Options
+
+extensions *string*
+: Proxy ssh agent extensions
+
+tls-cert *string*
+: TLS server cert (default "/home/msantos/.config/ssh-agent-mux/cert.pem")
+
+tls-client-cert *string*
+: TLS client cert (default "/home/msantos/.config/ssh-agent-mux/client.pem")
+
+tls-client-key *string*
+: TLS client key (default "/home/msantos/.config/ssh-agent-mux/client-key.pem")
+
+tls-key *string*
+: TLS server key (default "/home/msantos/.config/ssh-agent-mux/key.pem")
+
+tls-rootca *string*
+: TLS root CA file (default: /home/msantos/.config/ssh-agent-mux/rootca.pem, system CA root)
