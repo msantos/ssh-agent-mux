@@ -144,3 +144,7 @@ tls-key *string*
 
 tls-rootca *string*
 : TLS root CA file (default: /home/msantos/.config/ssh-agent-mux/rootca.pem, system CA root)
+
+# ALTERNATIVES
+
+* [socat](http://www.dest-unreach.org/socat/)
