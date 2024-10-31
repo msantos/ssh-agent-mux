@@ -94,14 +94,13 @@ backends support the extension, the proxy returns agent extension
 unsupported.
 
 all
-: the extension request is sent to all backends, returning any errors
+: the extension request is sent to all supported backends, returning any errors
 
 first
-: the extension request is sent to each backend in order. The response
-from the first backend supporting the extension is returned.
+: the response is returned from the first backend supporting the extension
 
 any
-: the extension request is sent to each backend in order. If a backend
+: the extension request is sent to each supported backend. If a backend
 returns an error, the next backend is tried. If a backend returns success,
 the proxy returns success.
 
@@ -131,19 +130,19 @@ extensions *string*
 : Proxy ssh agent extensions
 
 tls-cert *string*
-: TLS server cert (default "/home/msantos/.config/ssh-agent-mux/cert.pem")
+: TLS server cert (default "$XDG_CONFIG_HOME/ssh-agent-mux/cert.pem")
 
 tls-client-cert *string*
-: TLS client cert (default "/home/msantos/.config/ssh-agent-mux/client.pem")
+: TLS client cert (default "$XDG_CONFIG_HOME/ssh-agent-mux/client.pem")
 
 tls-client-key *string*
-: TLS client key (default "/home/msantos/.config/ssh-agent-mux/client-key.pem")
+: TLS client key (default "$XDG_CONFIG_HOME/ssh-agent-mux/client-key.pem")
 
 tls-key *string*
-: TLS server key (default "/home/msantos/.config/ssh-agent-mux/key.pem")
+: TLS server key (default "$XDG_CONFIG_HOME/ssh-agent-mux/key.pem")
 
 tls-rootca *string*
-: TLS root CA file (default: /home/msantos/.config/ssh-agent-mux/rootca.pem, system CA root)
+: TLS root CA file (default: $XDG_CONFIG_HOME/ssh-agent-mux/rootca.pem, system CA root)
 
 # ALTERNATIVES
 
