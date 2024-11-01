@@ -80,7 +80,11 @@ func (o *Opt) Accept(ctx context.Context, l net.Listener) error {
 			return err
 		}
 
-		go o.proxy(ctx, c)
+		go func() {
+			if err := o.proxy(ctx, c); err != nil {
+				o.log(err)
+			}
+		}()
 	}
 }
 
@@ -124,21 +128,22 @@ func (o *Opt) dial(remote *url.URL) (net.Conn, error) {
 	return tls.Client(c, config), nil
 }
 
-func (o *Opt) proxy(ctx context.Context, client net.Conn) {
+func (o *Opt) proxy(ctx context.Context, client net.Conn) error {
 	defer client.Close()
 
 	remotes := make([]io.ReadWriter, 0, len(o.remotes))
 	for _, v := range o.remotes {
 		c, err := o.dial(v)
 		if err != nil {
-			o.log(err)
-			return
+			return err
 		}
 		defer c.Close()
 		remotes = append(remotes, c)
 	}
 
 	if err := agent.New(agent.WithExtensions(o.extensions)).Serve(client, remotes); err != nil && !errors.Is(err, io.EOF) {
-		o.log(err)
+		return err
 	}
+
+	return nil
 }
