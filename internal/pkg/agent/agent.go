@@ -148,15 +148,14 @@ func (a *Proxy) Unlock(passphrase []byte) (err error) {
 
 // Signers returns signers for all the known keys.
 func (a *Proxy) Signers() ([]ssh.Signer, error) {
+	var errs error
 	signers := make([]ssh.Signer, 0)
 	for _, v := range a.w {
 		signer, err := v.Signers()
-		if err != nil {
-			return signer, err
-		}
 		signers = append(signers, signer...)
+		errs = errors.Join(errs, err)
 	}
-	return signers, nil
+	return signers, errs
 }
 
 // SignWithFlags signs like Sign, but allows for additional flags to be sent/received
