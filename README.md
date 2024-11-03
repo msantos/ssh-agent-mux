@@ -144,6 +144,65 @@ tls-key *string*
 tls-rootca *string*
 : TLS root CA file (default: $XDG_CONFIG_HOME/ssh-agent-mux/rootca.pem, system CA root)
 
+# CONFIGURATION
+
+## TLS
+
+TLS client and server certs can be generated using openssl or a utility
+like [mkcert](https://github.com/FiloSottile/mkcert):
+
+### Server
+
+* create the root CA and server cert
+
+```
+mkcert penguin.lxd
+```
+
+* copy the root CA and server cert to `$XDG_CONFIG_HOME/ssh-agent-mux` (by default: `$HOME/.config/ssh-agent-mux1)
+
+```
+mkdir -p $HOME/.config/ssh-agent-mux
+chmod 700 $HOME/.config/ssh-agent-mux
+
+cp penguin.lxd-key.pem $HOME/.config/ssh-agent-mux/key.pem
+cp penguin.lxd.pem $HOME/.config/ssh-agent-mux/cert.pem
+cp $HOME/.local/share/mkcert/rootCA.pem $HOME/.config/ssh-agent-mux/rootca.pem
+```
+
+* create a client certificate
+
+```
+# client: find the hostname
+$ hostname
+ubuntu
+
+# server: generate the client cert
+# ChromeOS: use the default FQDN
+mkcert --client ubuntu.lxd
+```
+
+* copy the client cert, key and root CA to the client
+
+```
+# ChromeOS
+cp ubuntu.lxd-client-key.pem  ubuntu.lxd-client.pem $HOME/.local/share/mkcert/rootCA.pem /mnt/chromeos/MyFiles/Downloads/
+```
+
+### Client
+
+* copy the client cert, key and root CA to `$XDG_CONFIG_HOME/ssh-agent-mux` (by default: `$HOME/.config/ssh-agent-mux1)
+
+```
+# ChromeOS
+mkdir -p $HOME/.config/ssh-agent-mux
+chmod 700 $HOME/.config/ssh-agent-mux
+
+cp /mnt/chromeos/MyFiles/Downloads/ubuntu.lxd-client-key.pem $HOME/.config/ssh-agent-mux/client-key.pem
+cp /mnt/chromeos/MyFiles/Downloads/ubuntu.lxd-client.pem $HOME/.config/ssh-agent-mux/client.pem
+cp /mnt/chromeos/MyFiles/Downloads/rootCA.pem $HOME/.config/ssh-agent-mux/rootca.pem
+```
+
 # ALTERNATIVES
 
 * [socat](http://www.dest-unreach.org/socat/)
