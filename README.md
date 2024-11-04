@@ -182,7 +182,7 @@ ubuntu
 mkcert --client ubuntu.lxd
 ```
 
-* copy the client cert, key and root CA to the client
+* transfer the client cert, key and root CA to the client
 
 ```
 # ChromeOS
@@ -198,9 +198,9 @@ cp ubuntu.lxd-client-key.pem  ubuntu.lxd-client.pem $HOME/.local/share/mkcert/ro
 mkdir -p $HOME/.config/ssh-agent-mux
 chmod 700 $HOME/.config/ssh-agent-mux
 
-cp /mnt/chromeos/MyFiles/Downloads/ubuntu.lxd-client-key.pem $HOME/.config/ssh-agent-mux/client-key.pem
-cp /mnt/chromeos/MyFiles/Downloads/ubuntu.lxd-client.pem $HOME/.config/ssh-agent-mux/client.pem
-cp /mnt/chromeos/MyFiles/Downloads/rootCA.pem $HOME/.config/ssh-agent-mux/rootca.pem
+mv /mnt/chromeos/MyFiles/Downloads/ubuntu.lxd-client-key.pem $HOME/.config/ssh-agent-mux/client-key.pem
+mv /mnt/chromeos/MyFiles/Downloads/ubuntu.lxd-client.pem $HOME/.config/ssh-agent-mux/client.pem
+mv /mnt/chromeos/MyFiles/Downloads/rootCA.pem $HOME/.config/ssh-agent-mux/rootca.pem
 ```
 
 # ALTERNATIVES
