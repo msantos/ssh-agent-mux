@@ -170,7 +170,7 @@ cp penguin.lxd.pem $HOME/.config/ssh-agent-mux/cert.pem
 cp $HOME/.local/share/mkcert/rootCA.pem $HOME/.config/ssh-agent-mux/rootca.pem
 ```
 
-* create a client certificate
+* create client certificates
 
 ```
 # client: find the hostname
@@ -185,13 +185,15 @@ mkcert --client ubuntu.lxd
 * transfer the client cert, key and root CA to the client
 
 ```
-# ChromeOS
+# ChromeOS: files can be copied using the shared Downloads mount
 cp ubuntu.lxd-client-key.pem  ubuntu.lxd-client.pem $HOME/.local/share/mkcert/rootCA.pem /mnt/chromeos/MyFiles/Downloads/
 ```
 
 ### Client
 
-* copy the client cert, key and root CA to `$XDG_CONFIG_HOME/ssh-agent-mux` (by default: `$HOME/.config/ssh-agent-mux1)
+* copy the client cert, key and root CA to the ssh-agent-mux
+  configuration directory: `$XDG_CONFIG_HOME/ssh-agent-mux` (by default:
+  `$HOME/.config/ssh-agent-mux)
 
 ```
 # ChromeOS
