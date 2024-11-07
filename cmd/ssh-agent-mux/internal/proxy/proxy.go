@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"slices"
 	"strings"
 	"syscall"
 
@@ -184,15 +185,16 @@ func (o *Opt) run(ctx context.Context) error {
 
 	clientCerts := make([]tls.Certificate, 0)
 
-	for _, v := range o.remotes {
-		if strings.HasPrefix(v.Scheme, "mtls") {
-			certificate, err := tls.LoadX509KeyPair(o.tlsClientCert, o.tlsClientKey)
-			if err != nil {
-				return err
-			}
-			clientCerts = append(clientCerts, certificate)
-			break
+	loadKeyPair := slices.ContainsFunc(o.remotes, func(u *url.URL) bool {
+		return strings.HasPrefix(u.Scheme, "mtls")
+	})
+
+	if loadKeyPair {
+		certificate, err := tls.LoadX509KeyPair(o.tlsClientCert, o.tlsClientKey)
+		if err != nil {
+			return err
 		}
+		clientCerts = append(clientCerts, certificate)
 	}
 
 	p := proxy.New(
