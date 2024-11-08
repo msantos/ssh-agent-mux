@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"path/filepath"
 	"slices"
 	"strings"
 	"syscall"
@@ -212,6 +213,9 @@ func (o *Opt) listen() (net.Listener, error) {
 	switch o.local.Scheme {
 	case "tls", "mtls":
 	case "unix":
+		if err := os.MkdirAll(filepath.Dir(o.local.Path), 0700); err != nil {
+			return nil, err
+		}
 		return net.Listen("unix", o.local.Path)
 	default:
 		return net.Listen(o.local.Scheme, o.local.Host)
