@@ -7,13 +7,16 @@ ssh-agent-mux proxy [*options*] *local* *remote* *...*
 Proxy ssh-agent sessions to local or remote ssh-agents.
 
 `ssh-agent-mux` proxies ssh agent requests to one or more backend ssh
-agents. The agents may be running on the local system using Unix sockets
-or accessed remotely over the network.
+agents. Backend agents can run:
+* locally: accessed using Unix sockets
+* remotely: connected to using TLS
 
 ## Rationale
 
-The default `penguin.lxd` ChromeOS container has access to hardware
-tokens like the Yubikey. Other containers cannot access the token.
+ChromeOS limits access to hardware tokens such as Yubikeys to the
+default `penguin.lxd` container. While other containers cannot directly
+access the token, using `ssh-agent-mux` allows selectively granting
+access to the token to authorized containers.
 
 ```mermaid
 graph TD
