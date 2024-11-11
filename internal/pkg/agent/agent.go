@@ -104,7 +104,7 @@ func (a *Proxy) Sign(key ssh.PublicKey, data []byte) (*ssh.Signature, error) {
 }
 
 // Add adds a private key to the agent.
-func (a *Proxy) Add(key agent.AddedKey) error {
+func (a *Proxy) Add(_ agent.AddedKey) error {
 	return ErrUnsupportedOp
 }
 
