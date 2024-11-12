@@ -210,7 +210,9 @@ func (o *Opt) run(ctx context.Context) error {
 }
 
 func (o *Opt) listen() (net.Listener, error) {
-	switch o.local.Scheme {
+	network, opt, _ := strings.Cut(o.local.Scheme, "+")
+
+	switch network {
 	case "tls", "mtls":
 	case "unix":
 		if err := os.MkdirAll(filepath.Dir(o.local.Path), 0700); err != nil {
@@ -218,7 +220,7 @@ func (o *Opt) listen() (net.Listener, error) {
 		}
 		return net.Listen("unix", o.local.Path)
 	default:
-		return net.Listen(o.local.Scheme, o.local.Host)
+		return net.Listen(network, o.local.Host)
 	}
 
 	certificate, err := tls.LoadX509KeyPair(o.tlsCert, o.tlsKey)
@@ -231,9 +233,13 @@ func (o *Opt) listen() (net.Listener, error) {
 		MinVersion:   tls.VersionTLS13,
 	}
 
-	if o.local.Scheme == "mtls" {
+	if network == "mtls" {
 		config.ClientAuth = tls.RequireAndVerifyClientCert
 		config.ClientCAs = o.tlsRootCAs
+
+		if opt == "insecure" {
+			config.ClientAuth = tls.RequireAnyClientCert
+		}
 	}
 
 	return tls.Listen("tcp", o.local.Host, config)
