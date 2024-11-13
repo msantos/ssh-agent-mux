@@ -88,20 +88,22 @@ func (o *Opt) Accept(ctx context.Context, l net.Listener) error {
 	}
 }
 
-func (o *Opt) dial(remote *url.URL) (net.Conn, error) {
+func (o *Opt) dial(ctx context.Context, remote *url.URL) (net.Conn, error) {
+	var d net.Dialer
+
 	network, opt, _ := strings.Cut(remote.Scheme, "+")
 
 	switch network {
 	case "tcp":
-		return net.Dial(network, remote.Host)
+		return d.DialContext(ctx, network, remote.Host)
 	case "unix":
-		return net.Dial(network, remote.Path)
+		return d.DialContext(ctx, network, remote.Path)
 	case "tls", "mtls":
 	default:
 		return nil, net.UnknownNetworkError(network)
 	}
 
-	c, err := net.Dial("tcp", remote.Host)
+	c, err := d.DialContext(ctx, "tcp", remote.Host)
 	if err != nil {
 		return nil, err
 	}
@@ -133,7 +135,7 @@ func (o *Opt) proxy(ctx context.Context, client net.Conn) error {
 
 	remotes := make([]io.ReadWriter, 0, len(o.remotes))
 	for _, v := range o.remotes {
-		c, err := o.dial(v)
+		c, err := o.dial(ctx, v)
 		if err != nil {
 			return err
 		}
