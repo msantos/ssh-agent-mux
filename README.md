@@ -9,7 +9,7 @@ Proxy ssh-agent sessions to local or remote ssh-agents.
 `ssh-agent-mux` proxies ssh agent requests to one or more backend ssh
 agents. Backend agents can run:
 * locally: accessed using Unix sockets
-* remotely: connected to using TLS
+* remotely: proxied TLS sessions connection to Unix sockets
 
 ## Rationale
 
@@ -73,7 +73,7 @@ argument. By default, extension requests return an extension unsupported
 error.
 
 The `--extensions` flag is a list of space separated matches. Each match
-consists of a `behaviour`:`regexp`. The regular expression matches the
+consists of a **behaviour**:**regexp**. The regular expression matches the
 agent extension name.
 
 ```
