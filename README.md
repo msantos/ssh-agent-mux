@@ -4,7 +4,7 @@ ssh-agent-mux proxy [*options*] *local* *remote* *...*
 
 # DESCRIPTION
 
-Proxy ssh-agent sessions to local or remote ssh-agents.
+Proxy ssh-agent sessions to one or more local or remote ssh-agents.
 
 `ssh-agent-mux` proxies ssh agent requests to one or more backend ssh
 agents. Backend agents can run:

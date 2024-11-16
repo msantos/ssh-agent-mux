@@ -20,7 +20,7 @@ Proxy ssh agent sessions.
 
 Commands:
 
-    proxy - proxy ssh-agent between sockets
+    proxy - proxy agent requests to one or more local or remote ssh-agents
 
 `, path.Base(os.Args[0]), config.Version(), os.Args[0])
 	fmt.Fprintf(os.Stderr, "Options:\n\n")
