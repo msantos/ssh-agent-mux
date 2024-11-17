@@ -7,16 +7,17 @@ ssh-agent-mux proxy [*options*] *local* *remote* *...*
 Proxy ssh-agent sessions to one or more local or remote ssh-agents.
 
 `ssh-agent-mux` proxies ssh agent requests to one or more backend ssh
-agents. Backend agents can run:
-* locally: accessed using Unix sockets
-* remotely: proxied TLS sessions connection to Unix sockets
+agents. These backend agents can be:
+* local: accessed via Unix sockets
+* remote: accessed through TLS sessions and proxied to other backend
+  Unix or TLS sockets
 
 ## Rationale
 
 ChromeOS limits access to hardware tokens such as Yubikeys to the
 default `penguin.lxd` container. While other containers cannot directly
 access the token, using `ssh-agent-mux` allows selectively granting
-access to the token to authorized containers.
+access to authorized containers.
 
 ```mermaid
 graph TD
@@ -68,13 +69,18 @@ ssh-agent-mux proxy agent.sock $SSH_AUTH_SOCK mtls://penguin.lxd:10080
 
 # AGENT PROTOCOL EXTENSIONS
 
-SSH agent protocol extension requests are controlled by the `--extensions`
-argument. By default, extension requests return an extension unsupported
-error.
+SSH agent protocol extension requests are matched against the
+`--extensions` argument. Unmatched extension requests return an extension
+unsupported error. By default, no extensions are allowed.
 
-The `--extensions` flag is a list of space separated matches. Each match
-consists of a **behaviour**:**regexp**. The regular expression matches the
-agent extension name.
+The `--extensions` flag is a list of space separated matches. The match
+syntax is:
+
+**behaviour**:**regexp**
+
+## Regular Expression
+
+The regular expression matches the agent extension name.
 
 ```
 ssh-agent-mux proxy --extensions="all:ext1@example.com first:ext2@example.com any:ext3@example.com" \
