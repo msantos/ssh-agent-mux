@@ -216,4 +216,12 @@ mv /mnt/chromeos/MyFiles/Downloads/rootCA.pem $HOME/.config/ssh-agent-mux/rootca
 
 # ALTERNATIVES
 
+## Agent Proxies
+
 * [socat](http://www.dest-unreach.org/socat/)
+
+## Yubikey SSH Agents
+
+* https://github.com/FiloSottile/yubikey-agent
+* https://github.com/smlx/piv-agent
+* https://github.com/vitalvas/oneauth
