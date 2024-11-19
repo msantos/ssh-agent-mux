@@ -74,9 +74,7 @@ SSH agent protocol extension requests are matched against the
 unsupported error. By default, no extensions are allowed.
 
 The `--extensions` flag is a list of space separated matches. The match
-syntax is:
-
-**behaviour**:**regexp**
+syntax is: `behaviour`:`regexp`
 
 ## Regular Expression
 
