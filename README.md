@@ -166,7 +166,7 @@ like [mkcert](https://github.com/FiloSottile/mkcert):
 mkcert penguin.lxd
 ```
 
-* copy the root CA and server cert to `$XDG_CONFIG_HOME/ssh-agent-mux` (by default: `$HOME/.config/ssh-agent-mux)
+* copy the root CA and server cert to `$XDG_CONFIG_HOME/ssh-agent-mux` (by default: `$HOME/.config/ssh-agent-mux`)
 
 ```
 mkdir -p $HOME/.config/ssh-agent-mux
@@ -200,7 +200,7 @@ cp ubuntu.lxd-client-key.pem  ubuntu.lxd-client.pem $HOME/.local/share/mkcert/ro
 
 * copy the client cert, key and root CA to the ssh-agent-mux
   configuration directory: `$XDG_CONFIG_HOME/ssh-agent-mux` (by default:
-  `$HOME/.config/ssh-agent-mux)
+  `$HOME/.config/ssh-agent-mux`)
 
 ```
 # ChromeOS
