@@ -85,7 +85,7 @@ ssh-agent-mux proxy --extensions="all:ext1@example.com first:ext2@example.com an
   agent.sock $SSH_AUTH_SOCK mtls://penguin.lxd:10080
 ```
 
-To match all agent extensions:
+All agent extensions can be matched using:
 
 ```
 --extensions "first:."
@@ -93,7 +93,7 @@ To match all agent extensions:
 
 ## Behaviours
 
-Extension requests are sent to the backends in the order specified on
+Extension requests are sent to agent backends in the order specified on
 the command line.
 
 Behaviours skip backends which do not support the extension. If no
