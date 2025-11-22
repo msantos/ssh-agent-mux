@@ -44,7 +44,7 @@ graph TD
 # BUILDING
 
 ```
-go install github.com/msantos/ssh-agent-mux/cmd/ssh-agent-mux@latest
+go install go.iscode.ca/ssh-agent-mux/cmd/ssh-agent-mux@latest
 ```
 
 To build a reproducible executable from the git repository:

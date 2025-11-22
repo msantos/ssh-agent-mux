@@ -17,9 +17,9 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/msantos/ssh-agent-mux/internal/pkg/agent"
-	"github.com/msantos/ssh-agent-mux/internal/pkg/config"
-	"github.com/msantos/ssh-agent-mux/internal/pkg/proxy"
+	"go.iscode.ca/ssh-agent-mux/internal/pkg/agent"
+	"go.iscode.ca/ssh-agent-mux/internal/pkg/config"
+	"go.iscode.ca/ssh-agent-mux/internal/pkg/proxy"
 )
 
 type Opt struct {

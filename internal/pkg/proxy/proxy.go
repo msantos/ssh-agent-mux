@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/msantos/ssh-agent-mux/internal/pkg/agent"
+	"go.iscode.ca/ssh-agent-mux/internal/pkg/agent"
 )
 
 type Opt struct {
