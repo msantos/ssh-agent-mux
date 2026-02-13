@@ -1,3 +1,5 @@
+[![Go Reference](https://pkg.go.dev/badge/go.iscode.ca/ssh-agent-mux.svg)](https://pkg.go.dev/go.iscode.ca/ssh-agent-mux)
+
 # SYNOPSIS
 
 ssh-agent-mux proxy [*options*] *local* *remote* *...*
@@ -49,7 +51,7 @@ go install go.iscode.ca/ssh-agent-mux/cmd/ssh-agent-mux@latest
 
 To build a reproducible executable from the git repository:
 
-```
+```bash
 CGO_ENABLED=0 go build -trimpath -ldflags "-w" ./cmd/ssh-agent-mux
 ```
 
@@ -57,13 +59,13 @@ CGO_ENABLED=0 go build -trimpath -ldflags "-w" ./cmd/ssh-agent-mux
 
 ## Server
 
-```
+```bash
 ssh-agent-mux proxy mtls://[::]:10080 $SSH_AUTH_SOCK
 ```
 
 ## Client
 
-```
+```bash
 ssh-agent-mux proxy agent.sock $SSH_AUTH_SOCK mtls://penguin.lxd:10080
 ```
 
@@ -80,7 +82,7 @@ syntax is: `behaviour`:`regexp`
 
 The regular expression matches the agent extension name.
 
-```
+```bash
 ssh-agent-mux proxy --extensions="all:ext1@example.com first:ext2@example.com any:ext3@example.com" \
   agent.sock $SSH_AUTH_SOCK mtls://penguin.lxd:10080
 ```
@@ -162,13 +164,13 @@ like [mkcert](https://github.com/FiloSottile/mkcert):
 
 * create the root CA and server cert
 
-```
+```bash
 mkcert penguin.lxd
 ```
 
 * copy the root CA and server cert to `$XDG_CONFIG_HOME/ssh-agent-mux` (by default: `$HOME/.config/ssh-agent-mux`)
 
-```
+```bash
 mkdir -p $HOME/.config/ssh-agent-mux
 chmod 700 $HOME/.config/ssh-agent-mux
 
@@ -179,7 +181,7 @@ cp $HOME/.local/share/mkcert/rootCA.pem $HOME/.config/ssh-agent-mux/rootca.pem
 
 * create client certificates
 
-```
+```bash
 # client: find the hostname
 $ hostname
 ubuntu
@@ -191,7 +193,7 @@ mkcert --client ubuntu.lxd
 
 * transfer the client cert, key and root CA to the client
 
-```
+```bash
 # ChromeOS: files can be copied using the shared Downloads mount
 cp ubuntu.lxd-client-key.pem  ubuntu.lxd-client.pem $HOME/.local/share/mkcert/rootCA.pem /mnt/chromeos/MyFiles/Downloads/
 ```
@@ -202,7 +204,7 @@ cp ubuntu.lxd-client-key.pem  ubuntu.lxd-client.pem $HOME/.local/share/mkcert/ro
   configuration directory: `$XDG_CONFIG_HOME/ssh-agent-mux` (by default:
   `$HOME/.config/ssh-agent-mux`)
 
-```
+```bash
 # ChromeOS
 mkdir -p $HOME/.config/ssh-agent-mux
 chmod 700 $HOME/.config/ssh-agent-mux
