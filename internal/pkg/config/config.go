@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 )
 
-var version = "0.2.1"
+var version = "0.2.2"
 
 const (
 	name = "ssh-agent-mux"
