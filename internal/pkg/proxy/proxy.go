@@ -131,7 +131,9 @@ func (o *Opt) dial(ctx context.Context, remote *url.URL) (net.Conn, error) {
 }
 
 func (o *Opt) proxy(ctx context.Context, client net.Conn) error {
-	defer client.Close()
+	defer func() {
+		_ = client.Close()
+	}()
 
 	remotes := make([]io.ReadWriter, 0, len(o.remotes))
 	for _, v := range o.remotes {
@@ -139,7 +141,9 @@ func (o *Opt) proxy(ctx context.Context, client net.Conn) error {
 		if err != nil {
 			return err
 		}
-		defer c.Close()
+		defer func() {
+			_ = c.Close()
+		}()
 		remotes = append(remotes, c)
 	}
 
