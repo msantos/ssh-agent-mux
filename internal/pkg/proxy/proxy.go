@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
-	"errors"
 	"io"
 	"net"
 	"net/url"
@@ -147,9 +146,5 @@ func (o *Opt) proxy(ctx context.Context, client net.Conn) error {
 		remotes = append(remotes, c)
 	}
 
-	if err := agent.New(agent.WithExtensions(o.extensions)).Serve(client, remotes); err != nil && !errors.Is(err, io.EOF) {
-		return err
-	}
-
-	return nil
+	return agent.New(agent.WithExtensions(o.extensions)).Serve(client, remotes)
 }
