@@ -130,7 +130,7 @@ func (a *Proxy) RemoveAll() (err error) {
 	return err
 }
 
-// Lock locks the agent. Sign and Remove will fail, and List will empty an empty list.
+// Lock locks the agent. Sign and Remove will fail, and List will return an empty list.
 func (a *Proxy) Lock(passphrase []byte) (err error) {
 	for _, v := range a.w {
 		err = errors.Join(err, v.Lock(passphrase))
