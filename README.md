@@ -120,8 +120,7 @@ the proxy returns success.
 The listening and remote sockets are URL formatted. Supported schemes are:
 
 * `unix`: unix socket
-  * example: unix:///tmp/agent-test.s
-  * paths can also be used: /tmp/agent-test.s
+  * example: unix:///tmp/agent-test.s, /tmp/agent-test.s
 * `tcp`: unencrypted TCP socket
   * example: tcp:///penguin.lxd:10080
 * `tls`: TLS socket
