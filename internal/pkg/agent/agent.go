@@ -42,6 +42,8 @@ func New(opt ...Option) *Opt {
 	return o
 }
 
+// Serve proxies the agent protocol on the given connection to the
+// agent backends. It returns when an I/O error occurs.
 func (o *Opt) Serve(r io.ReadWriter, ws []io.ReadWriter) error {
 	agents := make([]agent.ExtendedAgent, 0, len(ws))
 	for _, v := range ws {
