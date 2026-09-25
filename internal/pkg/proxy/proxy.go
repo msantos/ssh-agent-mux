@@ -66,6 +66,8 @@ func New(remotes []*url.URL, opt ...Option) *Opt {
 	return o
 }
 
+// Accept waits for incoming ssh agent client connections and proxies
+// the session to the backend ssh agents.
 func (o *Opt) Accept(ctx context.Context, l net.Listener) error {
 	for {
 		select {
