@@ -224,3 +224,31 @@ mv /mnt/chromeos/MyFiles/Downloads/rootCA.pem $HOME/.config/ssh-agent-mux/rootca
 * https://github.com/FiloSottile/yubikey-agent
 * https://github.com/smlx/piv-agent
 * https://github.com/vitalvas/oneauth
+
+## ChromeOS: Yubikey Access
+
+### LXD: Attaching a Yubikey to a Container
+
+To directly access the yubikey from an LXD container:
+
+* open the crostini terminal
+
+  ```
+  vsh termina
+  ```
+
+* add a rule to attach the yubikey to the container
+  * container name: e.g., ubuntu
+  * device name: e.g., yubikey
+  * vendor ID: 1050
+  * product ID: e.g., 0406 (YubiKey U2F + CCID)
+
+  ```
+  lxc config device add ubuntu yubikey usb vendorid=1050 productid=0406
+  ```
+
+4. show configuration
+
+   ```
+   lxc config device show ubuntu
+   ```
