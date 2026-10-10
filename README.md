@@ -252,3 +252,22 @@ To directly access the yubikey from an LXD container:
    ```
    lxc config device show ubuntu
    ```
+
+### LXD: Unix Socket Proxy
+
+Alternatively, the pcscd unix socket can shared between containers:
+
+* open the crostini terminal
+
+  ```
+  vsh termina
+  ```
+
+* run a proxy from penguin's pcscd socket into the ubuntu container
+
+  ```
+  lxc config device add ubuntu pcsc-proxy proxy \
+      connect=unix:/run/pcscd/pcscd.comm \
+      listen=unix:/run/pcscd/pcscd.comm \
+      bind=container
+  ```
