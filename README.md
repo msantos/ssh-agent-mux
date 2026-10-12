@@ -271,3 +271,17 @@ Alternatively, the pcscd unix socket can shared between containers:
       listen=unix:/run/pcscd/pcscd.comm \
       bind=container
   ```
+
+### socat PCSCD Proxy
+
+* penguin
+
+  ```
+  socat TCP-LISTEN:9099,bind=100.115.92.193,fork,reuseaddr UNIX-CONNECT:/run/pcscd/pcscd.comm
+  ```
+
+* ubuntu container
+
+  ```
+  sudo socat UNIX-LISTEN:/run/pcscd/pcscd.comm,fork,mode=666,unlink-early TCP:<penguin-internal-ip>:9099
+  ```
